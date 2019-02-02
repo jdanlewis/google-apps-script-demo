@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+  
+  <h1>Example Heading</h1>
+  
+  <h2>Another heading</h2>
+  
+  <!-- Show the user's name. -->
+  My name is <?= data["name"] ?>.
+  
+  <!-- Conditionally show their culinary choices. -->
+  <? var food = data["food"]; if (food) { ?>
+  <br><br>
+  I love <?= food ?>!
+  <? } ?>
+  
+  <br><br><br>
+  Submitted on <?= new Date() ?>
+
+  </body>
+</html>
+
+
