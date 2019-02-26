@@ -49,13 +49,16 @@ function getResponses(formResponse) {
   var itemResponses = formResponse.getItemResponses();
   var responses = {};
   var questions = {};
-  if (itemResponses.length !== responseIDs.length) {
-    Logger.log("WARNING: responseIDs does not match the length of the form response.");
-    return;
-  }
   for (var i = 0; i < itemResponses.length; i++) {
-    var responseID = responseIDs[i];
     var itemResponse = itemResponses[i];
+    var index = itemResponse.getItem().getIndex();
+    if (index >= responseIDs.length) {
+      Logger.log("WARNING: response index is out of range of responseIDs.");
+      Logger.log(" > responseIDs mapped: " + responseIDs.length);
+      Logger.log(" > response index: " + index);
+      return;
+    }
+    var responseID = responseIDs[index];
     responses[responseID] = itemResponse.getResponse();
     questions[responseID] = itemResponse.getItem().getTitle();
   }
