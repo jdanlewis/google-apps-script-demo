@@ -15,13 +15,13 @@
   <!-- Conditionally show their culinary choices. -->
   <? var food = data["food"]; if (food) { ?>
   <br><br>
-  I love <?= food ?>!
+  I asked <?= questions["food"] ?>
+  and you said you love <?= food ?>!
   <? } ?>
   
   <br><br><br>
   Submitted on <?= new Date() ?>
 
+  
   </body>
 </html>
-
-

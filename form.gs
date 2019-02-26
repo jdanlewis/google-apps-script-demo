@@ -23,13 +23,15 @@ function onFormSubmit(e) {
     return;
   }
   
-  var responses = getResponses(e.response);
-  if (!responses) {
+  var results = getResponses(e.response);
+  if (!results) {
     Logger.log("Unable to get responses. Aborting!");
     return;
   }
+  var responses = results.responses;
+  var questions = results.questions;
   
-  var blob = parseTemplate(responses);
+  var blob = parseTemplate(questions, responses);
   var folder = getFolder();
   var file = saveFile(blob, folder);
   
@@ -41,27 +43,33 @@ function onFormSubmit(e) {
   shareFile(file, email);
 }
 
-// getResponses accepts a FormResponse and returns a dictionary of
-// responses where keys are response IDs and their values are responses.
+// getResponses accepts a FormResponse and returns an object containing
+// responses and questions keyed by response ID.
 function getResponses(formResponse) {
   var itemResponses = formResponse.getItemResponses();
   var responses = {};
+  var questions = {};
   if (itemResponses.length !== responseIDs.length) {
     Logger.log("WARNING: responseIDs does not match the length of the form response.");
     return;
   }
   for (var i = 0; i < itemResponses.length; i++) {
     var responseID = responseIDs[i];
-    var response = itemResponses[i].getResponse();
-    responses[responseID] = response;
+    var itemResponse = itemResponses[i];
+    responses[responseID] = itemResponse.getResponse();
+    questions[responseID] = itemResponse.getItem().getTitle();
   }
-  return responses;
+  return {
+    responses: responses,
+    questions: questions
+  };
 }
 
-// parseTemplate accepts a dictionary of responses and evaluates an HTML
+// parseTemplate accepts results and evaluates an HTML
 // template, returning the result as a Blob.
-function parseTemplate(responses) {
+function parseTemplate(questions, responses) {
   var template = HtmlService.createTemplateFromFile("template");
+  template.questions = questions;
   template.data = responses;
   var html = template.evaluate();
   return html.getBlob();
