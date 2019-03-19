@@ -74,6 +74,7 @@ function parseTemplate(questions, responses) {
   var template = HtmlService.createTemplateFromFile("template");
   template.questions = questions;
   template.data = responses;
+  template.responseIDs = responseIDs;
   var html = template.evaluate();
   return html.getBlob();
 }

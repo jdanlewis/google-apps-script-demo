@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+  
+  <h1>Response IDs</h1>
+  
+  <? for (var i = 0; i < responseIDs.length; i++) { ?>
+  <h2><?= responseIDs[i] ?></h2>
+  <h3>Question</h3>
+  <?= questions[responseIDs[i]] ?>
+  <br>
+  <h3>Answer</h3>
+  <?= data[responseIDs[i]] ?>
+  <br><br>
+  <? } ?>
+  
+  <br><br><br>
+  Submitted on <?= new Date() ?>
+  
+  </body>
+</html>
