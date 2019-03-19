@@ -3,7 +3,9 @@
 var responseIDs = [
   "name",
   "email",
-  "food"
+  "food",
+  "check",
+  "final"
 ];
 
 // folderName is the name of the folder in which response documents are saved.
@@ -43,16 +45,30 @@ function onFormSubmit(e) {
   shareFile(file, email);
 }
 
+// isSkippableResponseItem returns true if the response item does not
+// contain user input.
+function isSkippableResponseItem(item) {
+  var type = item.getType();
+  return type == FormApp.ItemType.IMAGE ||
+    type == FormApp.ItemType.PAGE_BREAK ||
+    type == FormApp.ItemType.SECTION_HEADER ||
+    type == FormApp.ItemType.VIDEO;
+}
+
 // getResponses accepts a FormResponse and returns an object containing
 // responses and questions keyed by response ID.
 function getResponses(formResponse) {
   var itemResponses = formResponse.getItemResponses();
   var responses = {};
   var questions = {};
+  var index = 0;
   for (var i = 0; i < itemResponses.length; i++) {
     var itemResponse = itemResponses[i];
-    var index = itemResponse.getItem().getIndex();
-    if (index >= responseIDs.length) {
+    var item = itemResponse.getItem();
+    if (isSkippableResponseItem(item)) {
+      continue;
+    }
+    if (index > responseIDs.length) {
       Logger.log("WARNING: response index is out of range of responseIDs.");
       Logger.log(" > responseIDs mapped: " + responseIDs.length);
       Logger.log(" > response index: " + index);
@@ -61,6 +77,7 @@ function getResponses(formResponse) {
     var responseID = responseIDs[index];
     responses[responseID] = itemResponse.getResponse();
     questions[responseID] = itemResponse.getItem().getTitle();
+    index++;
   }
   return {
     responses: responses,
